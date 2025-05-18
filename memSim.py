@@ -1,13 +1,9 @@
+# imports
+from collections import deque
+
 # constants
 BLOCK_SIZE = 256
 TLB_SIZE = 16
-
-
-class tlb_entry:
-    def __init__(self, vpn, ppn):
-        self.vpn = vpn
-        self.ppn = ppn
-
 
 class TLB:
     def __init__(self, entries=None, oldest=0):
@@ -16,7 +12,7 @@ class TLB:
         self.entries = entries
         self.oldest = oldest
 
-    def insert(self, new: tlb_entry):
+    def insert(self, new):
         # check for empty slots in the TLB
         if self.entries[self.oldest] is None:
             self.entries[self.oldest] = new
