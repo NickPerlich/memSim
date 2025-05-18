@@ -2,38 +2,37 @@
 from collections import deque
 
 # constants
-BLOCK_SIZE = 256
+FRAME_SIZE = 256
 TLB_SIZE = 16
 
-class TLB:
-    def __init__(self, entries=None, oldest=0):
-        if entries is None:
-            entries = [None] * TLB_SIZE
-        self.entries = entries
-        self.oldest = oldest
-
-    def insert(self, new):
-        # check for empty slots in the TLB
-        if self.entries[self.oldest] is None:
-            self.entries[self.oldest] = new
-            # if the TLB has filled up, point to first entry as the oldest
-            if self.oldest + 1 >= TLB_SIZE:
-                self.oldest = 0
-            else:
-                self.oldest += 1
-        # all slots are filled, now we replace using FIFO
-        else:
-            self.entries[self.oldest] = new
-            if self.oldest + 1 >= TLB_SIZE:
-                self.oldest = 0
-            else:
-                self.oldest += 1
+tlb = deque()
 
 
-tlb = TLB()
-tlb_stream = [None] 
+def fifo(memory, new: str):
+    mem = deque(memory)
+    mem.popleft()  # pop the oldest item
+    mem.append(new)  # push the new item
+    return list(mem)
 
-for entree in tlb_stream:
-    tlb_stream[entree] = tlb_entry(1, 1)
 
-for entree in tlb_stream
+def lru(memory: deque, new: str, capacity: int) -> deque:
+    if new in memory:
+        memory.remove(new)       # Page already in memory → move to MRU
+    elif len(memory) >= capacity:
+        memory.popleft()         # Memory full → remove LRU (leftmost)
+
+    memory.append(new)           # Add to MRU position (rightmost)
+    return memory
+
+
+memory = ['a', 'b', 'c']
+
+input = ['a', 'b', 'c', 'a', 'd', 'b', 'e']
+
+memory = deque(memory)
+for i in input:
+    print(i)
+    memory = lru(memory, i, 3)
+    print(memory)
+
+
